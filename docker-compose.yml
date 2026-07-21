@@ -1,0 +1,71 @@
+# ============================================================
+# AI Helpdesk Agent - Docker Compose
+# Services: backend (FastAPI) + frontend (Streamlit)
+# ============================================================
+
+version: "3.9"
+
+services:
+
+  # ── FastAPI Backend ─────────────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    container_name: helpdesk-backend
+    command: uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app                                          # live reload
+      - helpdesk_uploads:/app/backend/documents/uploads
+      - helpdesk_chroma:/app/backend/vector_db/chroma_store
+      - helpdesk_db:/app/backend/database
+      - helpdesk_logs:/app/backend/logs
+    env_file:
+      - .env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # ── Streamlit Frontend ──────────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    container_name: helpdesk-frontend
+    command: >
+      streamlit run frontend/app.py
+      --server.port=8501
+      --server.address=0.0.0.0
+      --server.headless=true
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    environment:
+      - API_BASE_URL=http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+
+# ── Named Volumes (persistent data) ──────────────────────────
+volumes:
+  helpdesk_uploads:
+    driver: local
+  helpdesk_chroma:
+    driver: local
+  helpdesk_db:
+    driver: local
+  helpdesk_logs:
+    driver: local

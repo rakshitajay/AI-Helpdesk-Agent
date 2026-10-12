@@ -9,6 +9,7 @@ uvicorn[standard]==0.32.1
 python-multipart==0.0.20
 docx2txt
 langchain-groq==0.2.1
+langchain-google-genai
 
 # --- AI / LangChain ---
 langchain==0.3.25

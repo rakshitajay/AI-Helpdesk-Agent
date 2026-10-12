@@ -17,7 +17,7 @@ Uses LangChain prompt templates + Google Gemini via langchain-google-genai.
 import time
 from dataclasses import dataclass, field
 from typing import List, Optional
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
 from langchain.prompts import PromptTemplate
 from langchain.schema import Document
 from backend.vector_db.chroma_store import similarity_search
@@ -100,17 +100,20 @@ SUGGESTED_QUESTIONS:
 
 # ── LLM Factory ───────────────────────────────────────────────
 
-def get_llm() -> ChatGoogleGenerativeAI:
-    """Return a configured Gemini 2.5 Flash LLM instance."""
-    if not settings.google_api_key:
-        raise ValueError("GOOGLE_API_KEY is not configured. Add it to your .env file.")
+import os
+from langchain_groq import ChatGroq
 
-    return ChatGoogleGenerativeAI(
-        model=settings.gemini_model,
-        google_api_key=settings.google_api_key,
-        temperature=0.2,        # Low temperature = more factual
-        max_output_tokens=2048,
-        convert_system_message_to_human=True,
+def get_llm():
+    api_key = os.getenv("GROQ_API_KEY")
+
+    if not api_key:
+        raise ValueError("GROQ_API_KEY is not configured")
+
+    return ChatGroq(
+        model=os.getenv("GROQ_MODEL", "openai/gpt-oss-20b"),
+        api_key=api_key,
+        temperature=0.2,
+        max_tokens=2048,
     )
 
 

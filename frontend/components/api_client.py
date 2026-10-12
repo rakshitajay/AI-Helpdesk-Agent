@@ -10,7 +10,10 @@ import streamlit as st
 import requests
 from typing import Optional, Tuple, Any
 
-API_BASE = os.getenv("API_BASE_URL", "http://backend:8000")
+API_BASE = os.getenv(
+    "API_BASE",
+    os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
+).rstrip("/")
 
 
 def _headers() -> dict:

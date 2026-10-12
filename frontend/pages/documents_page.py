@@ -56,7 +56,6 @@ def show_documents_page():
                         uploaded_file.name,
                         description
                     )
-                    st.write("UPLOAD RESPONSE:", data)
 
                 if error:
                     st.error(f"❌ Upload failed: {error}")

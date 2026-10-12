@@ -14,7 +14,7 @@ Full flow:
 Uses LangChain prompt templates + Google Gemini via langchain-google-genai.
 """
 
-import time
+import time, os
 from dataclasses import dataclass, field
 from typing import List, Optional
 from langchain_groq import ChatGroq
@@ -100,18 +100,14 @@ SUGGESTED_QUESTIONS:
 
 # ── LLM Factory ───────────────────────────────────────────────
 
-import os
-from langchain_groq import ChatGroq
 
 def get_llm():
-    api_key = os.getenv("GROQ_API_KEY")
-
-    if not api_key:
+    if not settings.groq_api_key:
         raise ValueError("GROQ_API_KEY is not configured")
 
     return ChatGroq(
-        model=os.getenv("GROQ_MODEL", "openai/gpt-oss-20b"),
-        api_key=api_key,
+        model=settings.groq_model,
+        api_key=settings.groq_api_key,
         temperature=0.2,
         max_tokens=2048,
     )

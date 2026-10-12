@@ -22,8 +22,8 @@ class Settings(BaseSettings):
 
     # Google Gemini
     google_api_key: str = Field(default="", env="GOOGLE_API_KEY")
-    gemini_model: str = Field(default="gemini-2.5-flash", env="GEMINI_MODEL")
-    embedding_model: str = Field(default="models/embedding-001", env="EMBEDDING_MODEL")
+    gemini_model: str = Field(default="gemini-3.8-flash", env="GEMINI_MODEL")
+    embedding_model: str = Field(default="models/gemini-embedding-001", env="EMBEDDING_MODEL")
 
     # JWT
     jwt_secret_key: str = Field(default="changeme", env="JWT_SECRET_KEY")

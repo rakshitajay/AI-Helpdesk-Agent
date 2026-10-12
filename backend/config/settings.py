@@ -20,10 +20,20 @@ class Settings(BaseSettings):
     app_version: str = Field(default="1.0.0", env="APP_VERSION")
     debug: bool = Field(default=False, env="DEBUG")
 
-    # Google Gemini
+    # Groq LLM
+    # Groq LLM
+    groq_api_key: str = Field(default="", env="GROQ_API_KEY")
+    groq_model: str = Field(
+        default="openai/gpt-oss-20b",
+        env="GROQ_MODEL"
+    )
+
+    # Google Gemini Embeddings
     google_api_key: str = Field(default="", env="GOOGLE_API_KEY")
-    gemini_model: str = Field(default="gemini-3.8-flash", env="GEMINI_MODEL")
-    embedding_model: str = Field(default="models/gemini-embedding-001", env="EMBEDDING_MODEL")
+    embedding_model: str = Field(
+        default="models/gemini-embedding-001",
+        env="EMBEDDING_MODEL"
+    )
 
     # JWT
     jwt_secret_key: str = Field(default="changeme", env="JWT_SECRET_KEY")
